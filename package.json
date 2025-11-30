@@ -2,7 +2,14 @@
   "name": "feedback-pulse",
   "version": "0.1.0",
   "private": true,
+  "pnpm": {
+    "allowBuildScripts": {
+      "@prisma/client": true,
+      "prisma": true
+    }
+  },
   "scripts": {
+    "prebuild": "npm run prisma:generate",
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
