@@ -8,9 +8,28 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'Feedback Pulse - Collect Feedback Seamlessly',
+  description: 'A modern feedback collection platform with an embeddable widget and powerful admin dashboard. Collect user feedback, manage submissions, and improve your product.',
+  keywords: ['feedback', 'widget', 'user feedback', 'feedback collection', 'SaaS'],
+  authors: [{ name: 'YBM Labs' }],
+  creator: 'YBM Labs',
+  publisher: 'YBM Labs',
+  metadataBase: new URL('https://ybmlabs.bearerop.live'),
+  alternates: {
+    canonical: 'https://ybmlabs.bearerop.live',
+  },
+  openGraph: {
+    title: 'Feedback Pulse - Collect Feedback Seamlessly',
+    description: 'A modern feedback collection platform with an embeddable widget and powerful admin dashboard.',
+    url: 'https://ybmlabs.bearerop.live',
+    siteName: 'Feedback Pulse',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Feedback Pulse - Collect Feedback Seamlessly',
+    description: 'A modern feedback collection platform with an embeddable widget and powerful admin dashboard.',
+  },
   icons: {
     icon: [
       {

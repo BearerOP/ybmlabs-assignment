@@ -73,20 +73,25 @@
       position: fixed !important;
       bottom: 24px !important;
       right: 24px !important;
-      width: 56px !important;
-      height: 56px !important;
-      border-radius: 50% !important;
-      background: linear-gradient(135deg, #4EEA95 0%, #3BD889 100%) !important;
-      border: none !important;
+      min-width: 56px !important;
+      height: 52px !important;
+      padding: 0 22px !important;
+      border-radius: 14px !important;
+      background: rgba(255, 255, 255, 0.08) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      color: #f7f9fb !important;
       cursor: pointer !important;
-      box-shadow: 0 4px 12px rgba(78, 234, 149, 0.3), 0 0 20px rgba(78, 234, 149, 0.2) !important;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25) !important;
       z-index: 2147483647 !important;
-      display: flex !important;
+      display: inline-flex !important;
       align-items: center !important;
       justify-content: center !important;
+      gap: 10px !important;
       transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
-      animation: feedback-pulse-glow 2s ease-in-out infinite,
+                  box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.2s ease,
+                  background 0.2s ease !important;
+      animation: feedback-pulse-glow 4s ease-in-out infinite,
                  feedback-pulse-enter 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
       pointer-events: auto !important;
       opacity: 1 !important;
@@ -114,27 +119,42 @@
     }
 
     .feedback-pulse-btn:hover {
-      transform: scale(1.1) !important;
-      box-shadow: 0 6px 16px rgba(78, 234, 149, 0.4), 0 0 30px rgba(78, 234, 149, 0.3) !important;
+      transform: translateY(-2px) !important;
+      box-shadow: 0 14px 38px rgba(0, 0, 0, 0.35) !important;
+      border-color: rgba(255, 255, 255, 0.25) !important;
+      background: rgba(255, 255, 255, 0.12) !important;
     }
 
     .feedback-pulse-btn:active {
-      transform: scale(0.95) !important;
+      transform: translateY(0) scale(0.97) !important;
       transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
+    .feedback-pulse-btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 4px;
+    }
+
     .feedback-pulse-btn svg {
-      width: 24px;
-      height: 24px;
-      fill: #0D0E12;
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .feedback-pulse-btn-label {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
     }
 
     @keyframes feedback-pulse-glow {
       0%, 100% {
-        box-shadow: 0 4px 12px rgba(78, 234, 149, 0.3), 0 0 20px rgba(78, 234, 149, 0.2);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
       }
       50% {
-        box-shadow: 0 4px 16px rgba(78, 234, 149, 0.4), 0 0 30px rgba(78, 234, 149, 0.3);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
       }
     }
 
@@ -401,8 +421,8 @@
 
     @media (max-width: 640px) {
       .feedback-pulse-btn {
-        width: 48px;
         height: 48px;
+        padding: 0 18px !important;
         bottom: 16px;
         right: 16px;
       }
@@ -425,6 +445,7 @@
     button.setAttribute("aria-label", "Send Feedback")
     button.setAttribute("data-layout-id", "feedback-pulse-button")
   button.innerHTML = `
+    <span class="feedback-pulse-btn-icon" aria-hidden="true">
       <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
         <g fill="none" class="nc-icon-wrapper">
           <path d="M1 9.99348C1.00003 11.624 1.44063 13.1472 2.19626 14.4646C2.38601 14.9255 2.27792 15.4945 2.15636 15.9568C1.97097 16.6619 1.62172 17.3398 1.21379 17.7485C1.0104 17.9522 0.945503 18.2561 1.04846 18.525C1.1515 18.7939 1.40329 18.9771 1.69077 18.9927C2.51536 19.0372 3.42875 18.8742 4.22582 18.6419C4.83702 18.4638 5.42053 18.2318 5.88387 17.9889C7.15411 18.645 8.57122 18.9955 10.0009 18.9955C14.9719 18.9954 18.9997 14.9668 19 9.99728C19 5.05316 15.0118 1.04141 10.0779 1C5.1088 1.00007 1 5.02371 1 9.99348Z" fill="url(#feedback-pulse-glass-base)" mask="url(#feedback-pulse-mask)"></path>
@@ -456,7 +477,9 @@
             </mask>
           </defs>
         </g>
-    </svg>
+      </svg>
+    </span>
+    <span class="feedback-pulse-btn-label">Feedback</span>
   `
 
     // Create modal with layout ID
