@@ -2,118 +2,90 @@
 
 ## Base URL
 
-\`\`\`
-https://your-domain.com/api
-\`\`\`
+```
+https://ybmlabs.bearerop.live/api
+```
+
+For local development:
+```
+http://localhost:3000/api
+```
 
 ## Authentication
 
-Protected endpoints require a valid session cookie. Include credentials in requests:
+Feedback Pulse uses **Better Auth** for authentication with OAuth providers (Google and GitHub).
 
-\`\`\`javascript
+### OAuth Authentication
+
+Protected endpoints require a valid session cookie. Session cookies are automatically set after OAuth authentication.
+
+**Include credentials in requests:**
+
+```javascript
 fetch('/api/projects', {
   credentials: 'include'
 })
-\`\`\`
+```
+
+### Available OAuth Providers
+
+- **Google**: Sign in with Google account
+- **GitHub**: Sign in with GitHub account
+
+### Authentication Endpoints
+
+All authentication is handled through Better Auth at `/api/auth/[...all]`:
+
+- `GET /api/auth/sign-in/google` - Initiate Google OAuth flow
+- `GET /api/auth/sign-in/github` - Initiate GitHub OAuth flow
+- `POST /api/auth/sign-out` - Sign out and destroy session
+- `GET /api/auth/me` - Get current user session
 
 ## Endpoints
 
 ### Authentication
 
-#### Sign Up
-
-**POST** `/api/auth/signup`
-
-Create a new user account.
-
-**Request Body:**
-\`\`\`json
-{
-  "email": "user@example.com",
-  "password": "securepassword",
-  "name": "John Doe"
-}
-\`\`\`
-
-**Response (201):**
-\`\`\`json
-{
-  "user": {
-    "id": "clx...",
-    "email": "user@example.com",
-    "name": "John Doe"
-  }
-}
-\`\`\`
-
-**Error (400):**
-\`\`\`json
-{
-  "error": "User already exists"
-}
-\`\`\`
-
----
-
-#### Login
-
-**POST** `/api/auth/login`
-
-Authenticate a user.
-
-**Request Body:**
-\`\`\`json
-{
-  "email": "user@example.com",
-  "password": "securepassword"
-}
-\`\`\`
-
-**Response (200):**
-\`\`\`json
-{
-  "user": {
-    "id": "clx...",
-    "email": "user@example.com",
-    "name": "John Doe"
-  }
-}
-\`\`\`
-
----
-
-#### Logout
-
-**POST** `/api/auth/logout`
-
-Destroy user session.
-
-**Response (200):**
-\`\`\`json
-{
-  "success": true
-}
-\`\`\`
-
----
-
 #### Get Current User
 
 **GET** `/api/auth/me`
 
-Get authenticated user details.
+Get authenticated user details from session.
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "user": {
     "id": "clx...",
     "email": "user@example.com",
     "name": "John Doe",
+    "image": "https://...",
+    "emailVerified": true,
     "createdAt": "2025-01-01T00:00:00.000Z"
   }
 }
-\`\`\`
+```
+
+**Error (401):**
+```json
+{
+  "error": "Unauthorized"
+}
+```
+
+---
+
+#### Sign Out
+
+**POST** `/api/auth/logout`
+
+Destroy user session and sign out.
+
+**Response (200):**
+```json
+{
+  "success": true
+}
+```
 
 ---
 
@@ -126,7 +98,7 @@ Get authenticated user details.
 Get all projects for authenticated user.
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "projects": [
     {
@@ -141,7 +113,7 @@ Get all projects for authenticated user.
     }
   ]
 }
-\`\`\`
+```
 
 ---
 
@@ -152,14 +124,14 @@ Get all projects for authenticated user.
 Create a new project.
 
 **Request Body:**
-\`\`\`json
+```json
 {
   "name": "My Website"
 }
-\`\`\`
+```
 
 **Response (201):**
-\`\`\`json
+```json
 {
   "project": {
     "id": "clx...",
@@ -171,7 +143,14 @@ Create a new project.
     }
   }
 }
-\`\`\`
+```
+
+**Error (400):**
+```json
+{
+  "error": "Project name is required"
+}
+```
 
 ---
 
@@ -182,7 +161,7 @@ Create a new project.
 Get a single project by ID.
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "project": {
     "id": "clx...",
@@ -194,7 +173,14 @@ Get a single project by ID.
     }
   }
 }
-\`\`\`
+```
+
+**Error (404):**
+```json
+{
+  "error": "Project not found"
+}
+```
 
 ---
 
@@ -205,14 +191,14 @@ Get a single project by ID.
 Update project name.
 
 **Request Body:**
-\`\`\`json
+```json
 {
   "name": "Updated Name"
 }
-\`\`\`
+```
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "project": {
     "id": "clx...",
@@ -224,7 +210,7 @@ Update project name.
     }
   }
 }
-\`\`\`
+```
 
 ---
 
@@ -235,11 +221,11 @@ Update project name.
 Delete a project and all associated feedback.
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "success": true
 }
-\`\`\`
+```
 
 ---
 
@@ -252,23 +238,23 @@ Delete a project and all associated feedback.
 Submit feedback (public endpoint, CORS-enabled).
 
 **Request Body:**
-\`\`\`json
+```json
 {
   "projectKey": "clx...",
   "type": "BUG",
   "message": "Button doesn't work on mobile",
   "email": "reporter@example.com"
 }
-\`\`\`
+```
 
 **Fields:**
 - `projectKey` (required): Project key from embed code
 - `type` (required): "BUG" | "FEATURE" | "OTHER"
-- `message` (required): Feedback message
-- `email` (optional): Reporter's email
+- `message` (required): Feedback message text
+- `email` (optional): Reporter's email address
 
 **Response (201):**
-\`\`\`json
+```json
 {
   "success": true,
   "feedback": {
@@ -278,7 +264,32 @@ Submit feedback (public endpoint, CORS-enabled).
     "createdAt": "2025-01-01T00:00:00.000Z"
   }
 }
-\`\`\`
+```
+
+**Error (400):**
+```json
+{
+  "error": [
+    {
+      "path": ["message"],
+      "message": "Message is required"
+    }
+  ]
+}
+```
+
+**Error (404):**
+```json
+{
+  "error": "Invalid project key"
+}
+```
+
+**CORS Headers:**
+All responses include:
+- `Access-Control-Allow-Origin: *`
+- `Access-Control-Allow-Methods: POST, OPTIONS`
+- `Access-Control-Allow-Headers: Content-Type`
 
 ---
 
@@ -294,12 +305,12 @@ Get feedback for a project with filtering and pagination.
 - `type` (optional, default: "ALL"): "ALL" | "BUG" | "FEATURE" | "OTHER"
 
 **Example:**
-\`\`\`
+```
 GET /api/projects/clx.../feedback?page=1&limit=10&type=BUG
-\`\`\`
+```
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "feedback": [
     {
@@ -308,7 +319,7 @@ GET /api/projects/clx.../feedback?page=1&limit=10&type=BUG
       "message": "Button doesn't work",
       "email": "reporter@example.com",
       "userAgent": "Mozilla/5.0...",
-      "sentiment": "negative",
+      "sentiment": null,
       "createdAt": "2025-01-01T00:00:00.000Z",
       "labels": [
         {
@@ -325,7 +336,7 @@ GET /api/projects/clx.../feedback?page=1&limit=10&type=BUG
     "totalPages": 5
   }
 }
-\`\`\`
+```
 
 ---
 
@@ -338,14 +349,14 @@ GET /api/projects/clx.../feedback?page=1&limit=10&type=BUG
 Add a label to feedback.
 
 **Request Body:**
-\`\`\`json
+```json
 {
   "label": "Priority"
 }
-\`\`\`
+```
 
 **Response (201):**
-\`\`\`json
+```json
 {
   "label": {
     "id": "clx...",
@@ -353,7 +364,7 @@ Add a label to feedback.
     "createdAt": "2025-01-01T00:00:00.000Z"
   }
 }
-\`\`\`
+```
 
 ---
 
@@ -367,11 +378,11 @@ Remove a label from feedback.
 - `labelId` (required): ID of label to remove
 
 **Response (200):**
-\`\`\`json
+```json
 {
   "success": true
 }
-\`\`\`
+```
 
 ---
 
@@ -380,32 +391,32 @@ Remove a label from feedback.
 All endpoints follow consistent error response format:
 
 **400 Bad Request:**
-\`\`\`json
+```json
 {
   "error": "Validation error message"
 }
-\`\`\`
+```
 
 **401 Unauthorized:**
-\`\`\`json
+```json
 {
   "error": "Unauthorized"
 }
-\`\`\`
+```
 
 **404 Not Found:**
-\`\`\`json
+```json
 {
   "error": "Resource not found"
 }
-\`\`\`
+```
 
 **500 Internal Server Error:**
-\`\`\`json
+```json
 {
   "error": "Internal server error"
 }
-\`\`\`
+```
 
 ---
 
@@ -415,27 +426,46 @@ All endpoints follow consistent error response format:
 
 Add this script before the closing `</body>` tag:
 
-\`\`\`html
+```html
 <script>
   (function() {
     var script = document.createElement('script');
-    script.src = 'https://your-domain.com/widget/feedback.js';
+    script.src = 'https://ybmlabs.bearerop.live/widget/feedback.js';
     script.setAttribute('data-project-key', 'YOUR_PROJECT_KEY');
     script.async = true;
+    script.id = 'feedback-pulse-script';
     document.head.appendChild(script);
   })();
 </script>
-\`\`\`
+```
 
 Replace `YOUR_PROJECT_KEY` with the key from your project dashboard.
+
+### React/Next.js Component
+
+Use the provided React component:
+
+```tsx
+import { FeedbackPulseWidget } from "@/components/feedback-pulse-widget"
+
+export function YourPage() {
+  return (
+    <>
+      {/* Your page content */}
+      <FeedbackPulseWidget projectKey="YOUR_PROJECT_KEY" />
+    </>
+  )
+}
+```
 
 ### Customization
 
 The widget automatically adapts to your website and works across all domains.
 
 **Features:**
-- Floating button (bottom-right)
+- Floating button (bottom-right, subtle design)
 - Accessible modal form
 - Mobile responsive
-- Dark mode compatible
+- Dark theme compatible
 - No dependencies
+- CORS-enabled for cross-domain support
