@@ -4,6 +4,12 @@ A modern, full-stack SaaS feedback collection platform with an embeddable widget
 
 **Live URL**: https://ybmlabs.bearerop.live
 
+## Demo
+
+Watch a demo video to see Feedback Pulse in action:
+
+🎥 **[View Demo Video](https://www.loom.com/share/db837f0a40b0448fa3e21934a2e3f53c)**
+
 ## Features
 
 - **Authentication**: OAuth sign-in with Google and GitHub
